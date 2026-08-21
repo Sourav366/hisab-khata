@@ -56,22 +56,28 @@
       radial-gradient(ellipse at top left, rgba(255,255,255,0.5) 0%, transparent 45%),
       var(--paper);
     position:relative;
-    padding-left:30px; /* স্পাইনের জন্য */
+    /* padding-left:30px; — এটি এখন app-main-content হ্যান্ডেল করবে */
     box-shadow: 0 0 60px rgba(0,0,0,0.35);
     overflow-x:hidden;
   }
+  .app-main-content{
+    margin-left:22px; /* স্পাইনের প্রস্থ */
+    padding:0 18px; /* কন্টেন্টের ভিতরের প্যাডিং */
+    position:relative;
+    min-height:calc(100vh - 40px); /* ফুটার ক্রেডিটের জন্য */
+    padding-bottom:40px; /* ফুটার ক্রেডিটের জন্য */
+  }
   header.cover{
-    padding:24px 18px 18px 0; /* বাম পাশের প্যাডিং ০ করা হয়েছে */
+    padding:24px 0 18px 0; /* padding এখন app-main-content হ্যান্ডেল করবে */
     position:relative;
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
     gap:12px;
   }
-  header.cover > div:first-child{ /* টেক্সট কন্টেইনার */
+  header.cover > div:first-child{
     flex-grow:1;
-    min-width:0; /* যেন ছোট হতে পারে */
-    padding-left:18px; /* কন্টেন্ট স্পাইনের পর থেকে শুরু হবে */
+    min-width:0; /* লেখা যাতে ছোট হতে পারে */
   }
   /* Ledger spine — leather binding with gilt edge */
   .spine{
@@ -573,111 +579,117 @@
   <div class="spine"></div>
   <div class="holes"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
-  <header class="cover">
-    <div>
-      <div class="eyebrow">দৈনন্দিন আয়-ব্যয়</div>
-      <h1>আমার হিসাবের খাতা</h1>
-      <div class="sub">আপনার প্রতিদিনের আয় ও ব্যয়ের সহজ হিসাব</div>
-      <div class="creator-tag">Created by Sourav Ahmed</div>
-    </div>
-    <div class="seal"><span>৳</span></div>
-  </header>
+<div class="app" id="app">
+  <div class="spine"></div>
+  <div class="holes"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
-  <div class="page-tabs">
-    <div class="tab-btn active" id="tabDash">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21V13a1 1 0 011-1h3a1 1 0 011 1v8M4 21h16M15 21v-6a1 1 0 011-1h3a1 1 0 011 1v6M9 21V7a1 1 0 011-1h4a1 1 0 011 1v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      ড্যাশবোর্ড
-    </div>
-    <div class="tab-btn" id="tabLedger">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5.5A2.5 2.5 0 016.5 3H19a1 1 0 011 1v15a1 1 0 01-1 1H6.5A2.5 2.5 0 014 17.5v-12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 016.5 15H20M8 7.5h8M8 10.5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      হিসাবের খাতা
-    </div>
-  </div>
+  <div class="app-main-content">
+    <header class="cover">
+      <div>
+        <div class="eyebrow">দৈনন্দিন আয়-ব্যয়</div>
+        <h1>আমার হিসাবের খাতা</h1>
+        <div class="sub">আপনার প্রতিদিনের আয় ও ব্যয়ের সহজ হিসাব</div>
+        <div class="creator-tag">Created by Sourav Ahmed</div>
+      </div>
+      <div class="seal"><span>৳</span></div>
+    </header>
 
-  <div class="page active" id="pageDashboard">
-    <div class="alltime-card">
-      <div class="label">সর্বমোট আয়</div>
-      <div class="since" id="sinceLabel">যাত্রা শুরু হয়নি এখনো</div>
-      <div class="value" id="at-income">৳০</div>
-      <div class="alltime-grid">
-        <div class="alltime-item income"><div class="l">মোট আয়</div><div class="v" id="at-income-tile">৳০</div></div>
-        <div class="alltime-item salary"><div class="l">মোট বেতন</div><div class="v" id="at-salary-tile">৳০</div></div>
-        <div class="alltime-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="at-expense-tile">৳০</div></div>
+    <div class="page-tabs">
+      <div class="tab-btn active" id="tabDash">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21V13a1 1 0 011-1h3a1 1 0 011 1v8M4 21h16M15 21v-6a1 1 0 011-1h3a1 1 0 011 1v6M9 21V7a1 1 0 011-1h4a1 1 0 011 1v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        ড্যাশবোর্ড
+      </div>
+      <div class="tab-btn" id="tabLedger">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5.5A2.5 2.5 0 016.5 3H19a1 1 0 011 1v15a1 1 0 01-1 1H6.5A2.5 2.5 0 014 17.5v-12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 016.5 15H20M8 7.5h8M8 10.5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        হিসাবের খাতা
       </div>
     </div>
 
-    <div class="backup-card">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <h3 style="margin:0;font-family:Baloo Da 2,sans-serif;font-size:14px;color:var(--maroon-dark);font-weight:600;">🔐 ব্যাকআপ ও সুরক্ষা</h3>
-        <span style="font-size:11px;color:var(--muted);" id="backupStatus">শেষ: নেই</span>
-      </div>
-
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;background:var(--paper-deep);border-radius:11px;margin-bottom:10px;">
-        <div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);">🔄 অটো-ব্যাকআপ</div>
-          <div style="font-size:11px;color:var(--muted);">Download ফোল্ডারে অটো-সেভ</div>
+    <div class="page active" id="pageDashboard">
+      <div class="alltime-card">
+        <div class="label">সর্বমোট আয়</div>
+        <div class="since" id="sinceLabel">যাত্রা শুরু হয়নি এখনো</div>
+        <div class="value" id="at-income">৳০</div>
+        <div class="alltime-grid">
+          <div class="alltime-item income"><div class="l">মোট আয়</div><div class="v" id="at-income-tile">৳০</div></div>
+          <div class="alltime-item salary"><div class="l">মোট বেতন</div><div class="v" id="at-salary-tile">৳০</div></div>
+          <div class="alltime-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="at-expense-tile">৳০</div></div>
         </div>
-        <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
-          <input type="checkbox" id="autoBackupToggle" style="opacity:0;width:0;height:0;">
-          <span id="autoBackupSlider" style="position:absolute;inset:0;background:#ccc;border-radius:12px;transition:.3s;"></span>
-          <span id="autoBackupKnob" style="position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
-        </label>
       </div>
 
-      <div style="display:flex;gap:8px;margin-bottom:6px;">
-        <button class="backup-btn" id="shareBtn" style="background:linear-gradient(135deg,#1A5276,#154360);color:#fff;border:none;box-shadow:0 4px 10px rgba(21,67,96,0.3);">☁️ ক্লাউডে শেয়ার</button>
-        <button class="backup-btn" id="importBtn">📂 ফাইল থেকে আনুন</button>
+      <div class="backup-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <h3 style="margin:0;font-family:Baloo Da 2,sans-serif;font-size:14px;color:var(--maroon-dark);font-weight:600;">🔐 ব্যাকআপ ও সুরক্ষা</h3>
+          <span style="font-size:11px;color:var(--muted);" id="backupStatus">শেষ: নেই</span>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;background:var(--paper-deep);border-radius:11px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);">🔄 অটো-ব্যাকআপ</div>
+            <div style="font-size:11px;color:var(--muted);">Download ফোল্ডারে অটো-সেভ</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
+            <input type="checkbox" id="autoBackupToggle" style="opacity:0;width:0;height:0;">
+            <span id="autoBackupSlider" style="position:absolute;inset:0;background:#ccc;border-radius:12px;transition:.3s;"></span>
+            <span id="autoBackupKnob" style="position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+          </label>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:6px;">
+          <button class="backup-btn" id="shareBtn" style="background:linear-gradient(135deg,#1A5276,#154360);color:#fff;border:none;box-shadow:0 4px 10px rgba(21,67,96,0.3);">☁️ ক্লাউডে শেয়ার</button>
+          <button class="backup-btn" id="importBtn">📂 ফাইল থেকে আনুন</button>
+        </div>
+
+        <input type="file" id="importFile" accept="application/json" style="display:none;">
+
+        <div style="text-align:center;margin-top:4px;">
+          <span id="openSettingsBtn" style="font-size:11.5px;color:var(--gold);font-weight:600;cursor:pointer;">⚙️ সব ব্যাকআপ অপশন →</span>
+        </div>
+
+        <div class="backup-note" id="backupNote"></div>
       </div>
 
-      <input type="file" id="importFile" accept="application/json" style="display:none;">
-
-      <div style="text-align:center;margin-top:4px;">
-        <span id="openSettingsBtn" style="font-size:11.5px;color:var(--gold);font-weight:600;cursor:pointer;">⚙️ সব ব্যাকআপ অপশন →</span>
+      <div class="section-title">বছরভিত্তিক হিসাব</div>
+      <div class="year-list" id="yearList">
+        <div class="loading-row">হিসাব গণনা করা হচ্ছে…</div>
       </div>
-
-      <div class="backup-note" id="backupNote"></div>
+      <div style="height:90px;"></div>
     </div>
 
-    <div class="section-title">বছরভিত্তিক হিসাব</div>
-    <div class="year-list" id="yearList">
-      <div class="loading-row">হিসাব গণনা করা হচ্ছে…</div>
+    <div class="page" id="pageLedger">
+    <div class="profile-row">
+      <div class="chip" id="chip-job" data-profile="job">চাকুরিজীবি</div>
+      <div class="chip" id="chip-biz" data-profile="business">ব্যবসায়ী</div>
     </div>
+
+    <div class="highlight-card">
+      <div class="label" id="hc-label">এই মাসের ব্যালেন্স</div>
+      <div class="value" id="hc-value">৳০</div>
+      <div class="hc-grid">
+        <div class="hc-item income"><div class="l" id="hc-income-label">মোট আয়</div><div class="v" id="hc-income-val">৳০</div></div>
+        <div class="hc-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="hc-expense-val">৳০</div></div>
+        <div class="hc-item balance"><div class="l">সঞ্চয়</div><div class="v" id="hc-balance-val">৳০</div></div>
+      </div>
+    </div>
+
+    <div class="month-nav">
+      <div class="m-btn" id="prevMonth">‹</div>
+      <div class="m-label" id="monthLabel">আগস্ট, ২০২৬</div>
+      <div class="m-btn" id="nextMonth">›</div>
+    </div>
+
+    <div class="breakdown" id="breakdownBox" style="display:none;">
+      <h3>এই মাসের খরচের খাত</h3>
+      <div id="breakdownList"></div>
+    </div>
+
+    <div class="section-title">লেনদেনসমূহ</div>
+    <div id="listBox">
+      <div class="loading-row">হিসাবের খাতা খোলা হচ্ছে…</div>
+    </div>
+
     <div style="height:90px;"></div>
-  </div>
-
-  <div class="page" id="pageLedger">
-  <div class="profile-row">
-    <div class="chip" id="chip-job" data-profile="job">চাকুরিজীবি</div>
-    <div class="chip" id="chip-biz" data-profile="business">ব্যবসায়ী</div>
-  </div>
-
-  <div class="highlight-card">
-    <div class="label" id="hc-label">এই মাসের ব্যালেন্স</div>
-    <div class="value" id="hc-value">৳০</div>
-    <div class="hc-grid">
-      <div class="hc-item income"><div class="l" id="hc-income-label">মোট আয়</div><div class="v" id="hc-income-val">৳০</div></div>
-      <div class="hc-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="hc-expense-val">৳০</div></div>
-      <div class="hc-item balance"><div class="l">সঞ্চয়</div><div class="v" id="hc-balance-val">৳০</div></div>
     </div>
-  </div>
-
-  <div class="month-nav">
-    <div class="m-btn" id="prevMonth">‹</div>
-    <div class="m-label" id="monthLabel">আগস্ট, ২০২৬</div>
-    <div class="m-btn" id="nextMonth">›</div>
-  </div>
-
-  <div class="breakdown" id="breakdownBox" style="display:none;">
-    <h3>এই মাসের খরচের খাত</h3>
-    <div id="breakdownList"></div>
-  </div>
-
-  <div class="section-title">লেনদেনসমূহ</div>
-  <div id="listBox">
-    <div class="loading-row">হিসাবের খাতা খোলা হচ্ছে…</div>
-  </div>
-
-  <div style="height:90px;"></div>
   </div>
 </div>
 
@@ -1770,5 +1782,5 @@
   init();
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e7609ddd60b253',t:'MTc4NzI5MTYwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e7c8e909bfa443',t:'MTc4NzI5NTg3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
