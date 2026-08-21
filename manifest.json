@@ -1,0 +1,37 @@
+{
+  "name": "আমার হিসাবের খাতা",
+  "short_name": "হিসাবের খাতা",
+  "author": "Sourav Ahmed",
+  "description": "দৈনন্দিন আয়-ব্যয়ের সহজ হিসাব",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#FAF4E4",
+  "theme_color": "#6B1B2E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "finance",
+    "productivity"
+  ],
+  "lang": "bn",
+  "dir": "ltr"
+}

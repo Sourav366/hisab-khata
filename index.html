@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#6B1B2E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="1024x1024" href="icon.png">
+<title>আমার হিসাবের খাতা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF4E4;
+    --paper-deep:#F0E4C7;
+    --line:#E7D8AF;
+    --maroon:#6B1B2E;
+    --maroon-mid:#8C2A40;
+    --maroon-dark:#380C15;
+    --gold:#C9A227;
+    --gold-soft:#E4C775;
+    --gold-shine:#F6E7B4;
+    --ink:#241E19;
+    --muted:#7C6F5B;
+    --green:#1F6B45;
+    --green-soft:#DCEAE0;
+    --red:#9B3327;
+    --red-soft:#F0E0D9;
+    --card:#FFFDF7;
+    --shadow-warm: rgba(56,12,21,0.28);
+    --radius:18px;
+    --device-blue:#1A5276;
+    --device-blue-light:#D6EAF8;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    background: radial-gradient(circle at 20% 0%, #E9DCB8 0%, #CBB98C 60%, #B9A578 100%);
+    font-family:'Hind Siliguri', sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.5) 0%, transparent 45%),
+      var(--paper);
+    position:relative;
+    padding-left:30px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.35);
+    overflow-x:hidden;
+  }
+  /* Ledger spine — leather binding with gilt edge */
+  .spine{
+    position:absolute; left:0; top:0; bottom:0; width:22px;
+    background: linear-gradient(180deg, var(--maroon-mid) 0%, var(--maroon) 40%, var(--maroon-dark) 100%);
+    box-shadow: inset -4px 0 8px rgba(0,0,0,0.4), inset 2px 0 0 rgba(255,255,255,0.08), 2px 0 10px rgba(0,0,0,0.25);
+    z-index:5;
+  }
+ .spine::before{
+   content:"";
+    position:absolute; right:0; top:0; bottom:0; width:2px;
+    background: linear-gradient(180deg, var(--gold-shine), var(--gold) 50%, var(--gold-soft));
+    opacity:0.85;
+  }
+  .holes{
+    position:absolute; left:6px; top:0; bottom:0; width:10px;
+    display:flex; flex-direction:column; justify-content:flex-start; gap:40px;
+    padding-top:36px;
+  }
+  .holes span{
+    width:7px; height:7px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #FCF6E4, var(--paper-deep) 70%);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 0.5px 0 rgba(255,255,255,0.4);
+    display:block;
+  }
+
+  header.cover{
+    padding:24px 18px 18px 18px;
+    position:relative;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+  }
+  header.cover .eyebrow{
+    font-size:11px; letter-spacing:2.5px; color:var(--gold);
+    font-weight:700; text-transform:uppercase;
+  }
+  header.cover h1{
+    font-family:'Baloo Da 2', sans-serif;
+    font-weight:800;
+    font-size:28px;
+    margin:3px 0 3px;
+    color:var(--maroon-dark);
+    line-height:1.15;
+  }
+  header.cover .sub{
+    color:var(--muted); font-size:13px;
+  }
+  .seal{
+    flex-shrink:0;
+    width:46px; height:46px; border-radius:50%;
+    background: radial-gradient(circle at 32% 28%, var(--gold-shine) 0%, var(--gold) 55%, #8C6A15 100%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -2px 3px rgba(0,0,0,0.25);
+    border:1px solid rgba(255,255,255,0.4);
+    margin-top:2px;
+  }
+  .seal span{
+    font-family:'Tiro Bangla', serif;
+    font-size:20px; font-weight:700; color:var(--maroon-dark);
+    text-shadow:0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .profile-row{
+    display:flex; gap:8px; padding:2px 18px 18px 18px;
+  }
+  .chip{
+    flex:1;
+    border:1.5px solid var(--line);
+    background:var(--card);
+    border-radius:999px;
+    padding:9px 10px;
+    text-align:center;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--muted);
+    cursor:pointer;
+    transition: background .25s cubic-bezier(.4,0,.2,1), color .25s, border-color .25s, box-shadow .25s, transform .12s;
+    user-select:none;
+  }
+  .chip:active{transform:scale(0.96);}
+  .chip.active{
+    background: linear-gradient(135deg, var(--maroon-mid), var(--maroon));
+    border-color:var(--maroon);
+    color:#fff;
+    box-shadow:0 4px 10px rgba(107,27,46,0.35);
+  }
+
+  .highlight-card{
+    margin:0 18px 16px 18px;
+    background: linear-gradient(155deg, var(--maroon-mid) 0%, var(--maroon) 45%, var(--maroon-dark) 100%);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 14px 30px var(--shadow-warm), inset 0 1px 0 rgba(255,255,255,0.15);
+    border:1px solid rgba(201,162,39,0.35);
+  }
+  .highlight-card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:50%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.10), transparent);
+    pointer-events:none;
+  }
+  .highlight-card::after{
+    content:"৳";
+    position:absolute; right:-8px; bottom:-28px;
+    font-family:'Tiro Bangla', serif;
+    font-size:130px;
+    color:rgba(255,255,255,0.06);
+    line-height:1;
+  }
+  .highlight-card .label{
+    font-size:12px; opacity:0.8; font-weight:600; letter-spacing:0.5px;
+  }
+  .highlight-crd .value{
+    font-family:'Tiro Bangla', serif;
+    font-size:36px;
+    font-weight:700;
+    margin:3px 0 14px;
+    text-shadow:0 2px 8px rgba(0,0,0,0.2);
+  }
+  .hc-grid{
+    display:flex; gap:9px;
+    position:relative;
+  }
+  .hc-item{
+    flex:1; background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:11px; padding:9px 8px;
+    backdrop-filter: blur(2px);
+  }
+  .hc-item .l{font-size:10.5px; opacity:0.8; letter-spacing:0.2px;}
+  .hc-item .v{font-family:'Tiro Bangla', serif; font-size:14.5px; font-weight:700; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .hc-item.incme .v{color:#BFE8C4;}
+  .hc-item.expense .v{color:#F0C4B9;}
+  .hc-item.balance .v{color:var(--gold-shine); transition:color .2s;}
+  .hc-item.balance.negative .v{color:#F0A99A;}
+
+  .month-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 18px 12px 18px;
+  }
+  .month-nav .m-btn{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--card); border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; color:var(--maroon); cursor:pointer; font-weight:700;
+    user-select:none;
+    box-shadow:0 2px 5px rgba(0,0,0,0.06);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .month-nav .m-btn:active{transform:scale(0.9); box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+  .month-nav .m-label{
+    font-family:'Baloo Da 2', sans-serif;
+    font-weight:700; font-size:17px; color:var(--ink);
+    letter-spacing:0.2px;
+  }
+
+  .breakdown{
+    margin:4px 18px 18px 18px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 17px;
+    box-shadow:0 6px 18px rgba(107,27,46,0.06);
+  }
+  .breakdown h3{
+    margin:0 0 12px; font-size:13px; color:var(--maroon-dark);
+    font-family:'Baloo Da 2', sans-serif; font-weight:600; letter-spacing:0.2px;
+  }
+  .bar-row{margin-bottom:10px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-row .top{display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:5px;}
+  .bar-row .top .cat{color:var(--ink); font-weight:500;}
+  .bar-row .top .amt{font-family:'Tiro Bangla', serif; color:var(--muted);}
+  .bar-track{height:6px; background:var(--paper-deep); border-radius:5px; overflow:hidden;}
+  .bar-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--maroon-mid)); border-radius:5px; transition:width .6s cubic-bezier(.16,1,.3,1); width:0;}
+
+ .section-title{
+    padding:4px 18px 8px 18px;
+    font-family:'Baloo Da 2', sans-serif;font-weight:700; font-size:15px; color:var(--maroon-dark);
+    letter-spacing:0.2px;
+  }
+
+  .empty-state{
+    margin:10px 18px 30px 18px;
+    text-align:center;
+    padding:36px 16px;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+    border:1.5px dashed var(--line);
+    border-radius:var(--radius);
+    background:rgba(255,255,255,0.5);
+  }
+
+  .day-group{padding:0 14px 4px 18px;}
+  .day-heading{
+    font-size:12px; color:var(--gold); font-weight:700;
+    letter-spacing:0.6px; margin:16px 4px 7px 2px;
+    text-transform:uppercase;
+  }
+  @keyframes rowIn{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .entry{
+    display:flex; align-items:center; gap:10px;
+    padding:10px 6px;
+    position:relative;
+    border-radius:12px;
+    transition: background .15s;
+    animation: rowIn .35s cubic-bezier(.16,1,.3,1) backwards;
+  }
+  .entry:active{background:rgba(107,27,46,0.05);}
+  .entry .icon{
+    width:38px; height:38px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; flex-shrink:0;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03);
+  }
+  .entry.income .icon{background:var(--green-soft);}
+  .entry.expense .icon{background:var(--red-soft);}
+  .entry .mid{flex:1; min-width:0;}
+  .entry .cat{font-size:14px; font-weight:600; color:var(--ink);}
+  .entry .note{font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .entry .amt{
+    font-family:'Tiro Bangla', serif; font-size:15.5px; font-weight:700;
+    flex-shrink:0;
+  }
+  .entry.income .amt{color:var(--green);}
+  .entry.expense .amt{color:var(--red);}
+  .entry .del{
+    flex-shrink:0; font-size:11.5px; color:var(--muted);
+    border:1px solid var(--line); border-radius:8px;
+    padding:4px 7px; cursor:pointer; background:var(--card);
+    margin-left:2px;
+    transition: background .2s, color .2s, border-color .2s, transform .12s;
+  }
+  .entry .del:active{transform:scale(0.92);}
+  .entry .del.confirm{color:#fff; background:var(--red); border-color:var(--red);}
+
+  @keyframes fabGlow{
+    0%, 100%{box-shadow:0 8px 18px rgba(0,0,0,0.3), 0 0 0 0 rgba(201,162,39,0.35);}
+    50%{box-shadow:0 8px 18px rgba(0,0,0,0.3), 0 0 0 8px rgba(201,162,39,0);}
+  }
+  .fab{
+    position:fixed;
+    bottom:24px;
+    right:calc(50% - 240px + 20px);
+    width:58px; height:58px; border-radius:50%;
+    background: radial-gradient(circle at 32% 28%, var(--gold-shine) 0%, var(--gold) 55%, #8C6A15 100%);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:20; border:2px solid rgba(255,255,255,0.55);
+    user-select:none;
+    animation: fabGlow 2.8s ease-in-out infinite;
+    transition: transform .12s;
+  }
+  .fab:active{transform:scale(0.92);}
+  .fab svg{width:24px; height:24px; display:block;}
+  @media (max-width:480px){
+    .fab{right:20px;}
+  }
+
+  .sheet-overlay{
+    position:fixed; inset:0; background:rgba(36,30,25,0.55);
+    display:flex; align-items:flex-end; justify-content:center; z-index:30;
+    opacity:0; pointer-events:none;
+    transition: opacity .28s cubic-bezier(.4,0,.2,1);
+  }
+  .sheet-overlay.open{opacity:1; pointer-events:auto;}
+  .sheet{
+    width:100%; max-width:480px;
+    background:var(--paper);
+    border-radius:24px 24px 0 0;
+    padding:18px 20px 24px;
+    max-height:88vh; overflow-y:auto;
+    box-shadow:0 -16px 40px rgba(0,0,0,0.35);
+    border-top:1px solid rgba(201,162,39,0.4);
+    transform: translateY(24px);
+    transition: transform .32s cubic-bezier(.16,1,.3,1);
+  }
+  .sheet-overlay.open .sheet{transform: translateY(0);}
+  .sheet-handle{width:38px; height:4px; background:var(--line); border-radius:3px; margin:0 auto 14px;}
+  .sheet h2{
+    font-family:'Baloo Da 2', sans-serif; font-size:19px; color:var(--maroon-dark);
+    margin:0 0 14px;
+  }
+  .type-toggle{display:flex; gap:8px; margin-bottom:14px;}
+  .type-toggle button{
+    flex:1; padding:11px; border-radius:12px; border:1.5px solid var(--line);
+    background:var(--card); font-family:'Hind Siliguri'; font-size:14.5px; font-weight:600;
+    color:var(--muted); cursor:pointer;
+    transition: background .2s, color .2s, border-color .2s, transform .12s;
+  }
+  .type-toggle button:active{transform:scale(0.96);}
+  .type-toggle button.income.active{background:var(--green); border-color:var(--green); color:#fff; box-shadow:0 4px 10px rgba(31,107,69,0.25);}
+  .type-toggle button.expense.active{background:var(--red); border-color:var(--red); color:#fff; box-shadow:0 4px 10px rgba(155,51,39,0.25);}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12.5px; color:var(--muted); margin-bottom:6px; font-weight:600;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:12px 12px; border-radius:11px; border:1.5px solid var(--line);
+    background:var(--card); font-family:'Hind Siliguri'; font-size:15px; color:var(--ink);
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,39,0.18);
+  }
+  .amount-field{position:relative;}
+  .amount-field .taka{
+    position:absolute; left:13px; top:50%; transform:translateY(-50%);
+    font-family:'Tiro Bangla', serif; color:var(--muted); font-size:16px;
+  }
+  .amount-field input{padding-left:32px; font-family:'Tiro Bangla', serif; font-size:18px; font-weight:600;}
+  .hint{font-size:12px; color:var(--gold); margin-top:-6px; margin-bottom:12px; font-weight:500;}
+  .cat-grid{display:flex; flex-wrap:wrap; gap:8px;}
+  .cat-pill{
+    padding:8px 13px; border-radius:999px; border:1.5px solid var(--line);
+    background:var(--card); font-size:13px; cursor:pointer; color:var(--ink);
+    transition: background .18s, color .18s, border-color .18s, transform .12s;
+  }
+  .cat-pill:active{transform:scale(0.95);}
+  .cat-pill.active{background:var(--maroon); border-color:var(--maroon); color:#fff; box-shadow:0 3px 8px rgba(107,27,46,0.3);}
+  .save-btn{
+    width:100%; padding:14px; margin-top:6px;
+    background:linear-gradient(135deg, var(--maroon-mid), var(--maroon-dark));
+    color:#fff; border:none; border-radius:13px;
+    font-family:'Hind Siliguri'; font-size:15.5px; font-weight:700;
+    cursor:pointer; box-shadow:0 8px 18px rgba(56,12,21,0.35);
+    transition: transform .12s, box-shadow .12s;
+    letter-spacing:0.2px;
+  }
+  .save-btn:active{transform:scale(0.98); box-shadow:0 4px 10px rgba(56,12,21,0.3);}
+  .close-x{
+    position:absolute; top:16px; right:16px; font-size:18px; color:var(--muted); cursor:pointer;
+    width:30px; height:30px; border-radius:50%; background:var(--card);
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line);
+  }
+  .sheet{position:relative;}
+
+  .page{display:none;}
+  .page.active{display:block;}
+
+  .page-tabs{
+    display:flex; gap:6px; padding:0 18px 16px 18px;
+  }
+ .tab-btn{
+    flex:1; text-align:center; padding:10px 8px;
+    border-radius:12px; border:1.5px solid transparent;
+    font-size:13.5px; font-weight:700; color:var(--muted);
+    cursor:pointer; user-select:none;
+    font-family:'Hind Siliguri';
+    transition: background .2s, color .2s, box-shadow .2s, transform .12s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .tab-btn:active{transform:scale(0.96);}
+  .tab-btn svg{width:16px; height:16px; flex-shrink:0;}
+  .tab-btn.active{
+    background:var(--card); color:var(--maroon-dark);
+    box-shadow:0 4px 12px rgba(107,27,46,0.12), inset 0 0 0 1.5px var(--gold-soft);
+  }
+
+  .alltime-card{
+    margin:0 18px 20px 18px;
+    background: linear-gradient(155deg, #3D2E0E 0%, #6B1B2E 55%, #380C15 100%);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 14px 30px var(--shadow-warm), inset 0 1px 0 rgba(255,255,255,0.15);
+    border:1px solid rgba(201,162,39,0.35);
+  }
+  .alltime-card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:50%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.10), transparent);
+    pointer-events:none;
+  }
+  .alltime-card .label{font-size:12px; opacity:0.8; font-weight:600; letter-spacing:0.5px;}
+  .alltime-card .since{font-size:11.5px; opacity:0.65; margin-top:2px;}
+  .alltime-card .value{
+    font-family:'Tiro Bangla', serif; font-size:32px; font-weight:700;
+    margin:8px 0 14px; text-shadow:0 2px 8px rgba(0,0,0,0.2);
+  }
+  .alltime-grid{display:flex; gap:9px;}
+  .alltime-item{
+    flex:1; background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:11px; padding:9px 8px;
+  }
+  .alltime-item .l{font-size:10.5px; opacity:0.8;}
+  .alltime-item .v{font-family:'Tiro Bangla', serif; font-size:14px; font-weight:700; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .alltime-item.income .v{color:#BFE8C4;}
+  .alltime-item.salary .v{color:var(--gold-shine);}
+  .alltime-item.expense .v{color:#F0C4B9;}
+
+  .year-list{padding:0 18px 6px 18px;}
+  .year-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:15px 16px;
+    margin-bottom:12px;
+    box-shadow:0 6px 16px rgba(107,27,46,0.06);
+    position:relative;
+    cursor:pointer;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .year-card:active{transform:scale(0.985);}
+  .year-card::before{
+    content:"";
+    position:absolute; left:0; top:14px; bottom:14px; width:3px;
+    background:linear-gradient(180deg, var(--gold), var(--maroon-mid));
+    border-radius:0 3px 3px 0;
+  }
+  .year-card .yh{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:12px; padding-left:8px;
+  }
+  .year-card .yh .yr{
+    font-family:'Baloo Da 2', sans-serif; font-weight:700; font-size:19px; color:var(--maroon-dark);
+  }
+  .year-card .yh .yr .tag{
+    font-family:'Hind Siliguri'; font-size:11px; font-weight:600; color:var(--gold);
+    background:rgba(201,162,39,0.12); padding:2px 8px; border-radius:999px; margin-left:8px;
+  }
+  .year-card .yh .savings{
+    font-family:'Tiro Bangla', serif; font-size:14px; font-weight:700; color:var(--green);
+  }
+  .year-card .yh .savings.negative{color:var(--red);}
+  .year-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding-left:8px;}
+  .year-stat .l{font-size:10.5px; color:var(--muted); margin-bottom:2px;}
+  .year-stat .v{font-family:'Tiro Bangla', serif; font-size:13.5px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .year-stat.income .v{color:var(--green);}
+  .year-stat.salary .v{color:#9C7A12;}
+  .year-stat.expense .v{color:var(--red);}
+
+  .backup-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:17px; margin:0 18px 20px 18px; box-shadow:0 6px 18px rgba(107,27,46,0.06);
+  }
+  .backup-card h3{
+    margin:0 0 4px; font-family:'Baloo Da 2', sans-serif; font-size:14px; color:var(--maroon-dark); font-weight:600;
+  }
+  .backup-status{font-size:12px; color:var(--muted); margin-bottom:13px; line-height:1.5;}
+  .backup-row{display:flex; gap:8px; margin-bottom:8px;}
+  .backup-btn{
+    flex:1; padding:10px 8px; border-radius:11px; border:1.5px solid var(--line);
+    background:var(--paper); font-family:'Hind Siliguri'; font-size:12.8px; font-weight:600;
+    color:var(--ink); cursor:pointer; transition: transform .12s, background .2s;
+  }
+  .backup-btn:active{transform:scale(0.96);}
+  .backup-btn.gmail{
+    width:100%; background:linear-gradient(135deg,#C0392B,#922B21); color:#fff; border:none;
+    box-shadow:0 4px 10px rgba(146,43,33,0.3); padding:11px;
+  }
+  /* Device backup buttons */
+  .backup-btn.device-save{
+    background:linear-gradient(135deg,#1A5276,#154360); color:#fff; border:none;
+    box-shadow:0 4px 10px rgba(21,67,96,0.3);
+  }
+  .backup-btn.device-restore{
+    background:linear-gradient(135deg,#0E6655,#0B5345); color:#fff; border:none;
+    box-shadow:0 4px 10px rgba(11,83,69,0.3);
+  }
+  .backup-btn.device-auto{
+    background:linear-gradient(135deg,#6C3483,#5B2C6F); color:#fff; border:none;
+    box-shadow:0 4px 10px rgba(91,44,111,0.3);
+  }
+  .device-status{
+    font-size:11.5px; margin-top:8px; padding:8px 10px;
+    background:var(--device-blue-light); border-radius:9px;
+    color:var(--device-blue); line-height:1.5; word-break:break-word;
+  }
+  .device-status .label{font-weight:600; display:block; margin-bottom:2px;}
+  .device-status .sub{opacity:0.85; font-size:11px;}
+  .device-status.success{background:#D5F5E3; color:#1E8449;}
+  .device-status.error{background:#FADBD8; color:#922B21;}
+  .backup-note{font-size:11.5px; color:var(--gold); margin-top:9px; min-height:14px; font-weight:600;}
+  .backup-note.err{color:var(--red);}
+
+  .loading-row{padding:40px 20px; text-align:center; color:var(--muted); font-size:13.5px;}
+  ::-webkit-scrollbar{width:0px;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="spine"></div>
+  <div class="holes"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <header class="cover">
+    <div>
+      <div class="eyebrow">দৈনন্দিন আয়-ব্যয়</div>
+      <h1>আমার হিসাবের খাতা</h1>
+      <div class="sub">আপনার প্রতিদিনের আয় ও ব্যয়ের সহজ হিসাব</div>
+      <div class="creator-tag" style="font-size:10.5px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-top:2px;">Created by Sourav Ahmed</div>
+    </div>
+    <div class="seal"><span>৳</span></div>
+  </header>
+
+  <div class="page-tabs">
+    <div class="tab-btn active" id="tabDash">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21V13a1 1 0 011-1h3a1 1 0 011 1v8M4 21h16M15 21v-6a1 1 0 011-1h3a1 1 0 011 1v6M9 21V7a1 1 0 011-1h4a1 1 0 011 1v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      ড্যাশবোর্ড
+    </div>
+    <div class="tab-btn" id="tabLedger">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5.5A2.5 2.5 0 016.5 3H19a1 1 0 011 1v15a1 1 0 01-1 1H6.5A2.5 2.5 0 014 17.5v-12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 016.5 15H20M8 7.5h8M8 10.5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      হিসাবের খাতা
+    </div>
+  </div>
+
+  <div class="page active" id="pageDashboard">
+    <div class="alltime-card">
+      <div class="label">সর্বমোট আয়</div>
+      <div class="since" id="sinceLabel">যাত্রা শুরু হয়নি এখনো</div>
+      <div class="value" id="at-income">৳০</div>
+      <div class="alltime-grid">
+        <div class="alltime-item income"><div class="l">মোট আয়</div><div class="v" id="at-income-tile">৳০</div></div>
+        <div class="alltime-item salary"><div class="l">মোট বেতন</div><div class="v" id="at-salary-tile">৳০</div></div>
+        <div class="alltime-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="at-expense-tile">৳০</div></div>
+      </div>
+    </div>
+
+    <div class="backup-card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <h3 style="margin:0;font-family:Baloo Da 2,sans-serif;font-size:14px;color:var(--maroon-dark);font-weight:600;">🔐 ব্যাকআপ ও সুরক্ষা</h3>
+        <span style="font-size:11px;color:var(--muted);" id="backupStatus">শেষ: নেই</span>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;background:var(--paper-deep);border-radius:11px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);">🔄 অটো-ব্যাকআপ</div>
+          <div style="font-size:11px;color:var(--muted);">Download ফোল্ডারে অটো-সেভ</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
+          <input type="checkbox" id="autoBackupToggle" style="opacity:0;width:0;height:0;">
+          <span id="autoBackupSlider" style="position:absolute;inset:0;background:#ccc;border-radius:12px;transition:.3s;"></span>
+          <span id="autoBackupKnob" style="position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+        </label>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:6px;">
+        <button class="backup-btn" id="shareBtn" style="background:linear-gradient(135deg,#1A5276,#154360);color:#fff;border:none;box-shadow:0 4px 10px rgba(21,67,96,0.3);">☁️ ক্লাউডে শেয়ার</button>
+        <button class="backup-btn" id="importBtn">📂 ফাইল থেকে আনুন</button>
+      </div>
+
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+
+      <div style="text-align:center;margin-top:4px;">
+        <span id="openSettingsBtn" style="font-size:11.5px;color:var(--gold);font-weight:600;cursor:pointer;">⚙️ সব ব্যাকআপ অপশন →</span>
+      </div>
+
+      <div class="backup-note" id="backupNote"></div>
+    </div>
+
+    <div class="section-title">বছরভিত্তিক হিসাব</div>
+    <div class="year-list" id="yearList">
+      <div class="loading-row">হিসাব গণনা করা হচ্ছে…</div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
+  <div class="page" id="pageLedger">
+  <div class="profile-row">
+    <div class="chip" id="chip-job" data-profile="job">চাকুরিজীবি</div>
+    <div class="chip" id="chip-biz" data-profile="business">ব্যবসায়ী</div>
+  </div>
+
+  <div class="highlight-card">
+    <div class="label" id="hc-label">এই মাসের ব্যালেন্স</div>
+    <div class="value" id="hc-value">৳০</div>
+    <div class="hc-grid">
+      <div class="hc-item income"><div class="l" id="hc-income-label">মোট আয়</div><div class="v" id="hc-income-val">৳০</div></div>
+      <div class="hc-item expense"><div class="l">মোট ব্যয়</div><div class="v" id="hc-expense-val">৳০</div></div>
+      <div class="hc-item balance"><div class="l">সঞ্চয়</div><div class="v" id="hc-balance-val">৳০</div></div>
+    </div>
+  </div>
+
+  <div class="month-nav">
+    <div class="m-btn" id="prevMonth">‹</div>
+    <div class="m-label" id="monthLabel">আগস্ট, ২০২৬</div>
+    <div class="m-btn" id="nextMonth">›</div>
+  </div>
+
+  <div class="breakdown" id="breakdownBox" style="display:none;">
+    <h3>এই মাসের খরচের খাত</h3>
+    <div id="breakdownList"></div>
+  </div>
+
+  <div class="section-title">লেনদেনসমূহ</div>
+  <div id="listBox">
+    <div class="loading-row">হিসাবের খাতা খোলা হচ্ছে…</div>
+  </div>
+
+  <div style="height:90px;"></div>
+  </div>
+</div>
+
+<!-- ========== Footer Credit ========== -->
+<div style="text-align:center;padding:6px 30px 14px 30px;font-size:11px;color:var(--muted);letter-spacing:0.3px;">
+  Created by Sourav Ahmed
+</div>
+
+<div class="fab" id="fabAdd">
+  <svg viewox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 5V19M5 12H19" stroke="#380C15" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>
+</div>
+
+
+<!-- ========== Settings Sheet ========== -->
+<div class="sheet-overlay" id="settingsOverlay">
+  <div class="sheet" style="padding-bottom:20px;">
+    <div class="close-x" id="closeSettings">✕</div>
+    <div class="sheet-handle"></div>
+    <h2>&#9881;&#65039; ব্যাকআপ সেটিংস</h2>
+    
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);margin-bottom:10px;">&#128229; ফাইল সংরক্ষণ ও পুনরুদ্ধার</div>
+      <div class="backup-row">
+        <button class="backup-btn" id="exportBtn">&#128229; ফাইলে সংরক্ষণ</button>
+        <button class="backup-btn" id="importBtnSettings">&#128228; ফাইল থেকে আনুন</button>
+      </div>
+      <button class="backup-btn gmail" id="emailBtn" style="width:100%;margin-top:8px;">&#9993;&#65039; Gmail-এ ব্যাকআপ পাঠান</button>
+    </div>
+    
+    <div style="margin-bottom:14px;border-top:1px solid var(--line);padding-top:12px;">
+      <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);margin-bottom:10px;">&#128451;&#65039; ডিভাইস ব্যাকআপ (উন্নত)</div>
+      <div class="backup-row">
+        <button class="backup-btn device-save" id="deviceAutoBtn">&#128190; জায়গা বেছে নিন</button>
+        <button class="backup-btn device-restore" id="deviceRestoreBtn">&#128194; ডিভাইস থেকে আনুন</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px;border-top:1px solid var(--line);padding-top:12px;">
+      <div style="font-size:12.5px;font-weight:600;color:var(--maroon-dark);margin-bottom:10px;">&#128203; ব্যাকআপ ডাটা কপি</div>
+      <button class="backup-btn" id="copyBtn" style="background:linear-gradient(135deg,#6C3483,#5B2C6F);color:#fff;border:none;box-shadow:0 4px 10px rgba(91,44,111,0.3);width:100%;padding:11px;">&#128203; ক্লিপবোর্ডে কপি করুন</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="sheetOverlay">
+  <div class="sheet">
+    <div class="close-x" id="closeSheet">✕</div>
+    <div class="sheet-handle"></div>
+    <h2>নতুন হিসাব যোগ করুন</h2>
+
+    <div class="type-toggle">
+      <button class="income active" id="typeIncomeBtn">আয়</button>
+      <button class="expense" id="typeExpenseBtn">ব্যয়</button>
+    </div>
+    <div class="hint" id="typeHint"></div>
+
+    <div class="field amount-field">
+      <label>পরিমাণ</label>
+      <span class="taka">৳</span>
+      <input type="number" id="amountInput" placeholder="০" inputmode="decimal">
+    </div>
+
+    <div class="field">
+      <label>খাত</label>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+
+    <div class="field">
+      <label>তারিখ</label>
+      <input type="date" id="dateInput">
+    </div>
+
+    <div class="field">
+      <label>নোট (ঐচ্ছিক)</label>
+      <input type="text" id="noteInput" placeholder="যেমনঃ বাজার খরচ, রিকশা ভাড়া...">
+    </div>
+
+    <button class="save-btn" id="saveBtn">খাতায় যোগ করুন</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  const bnMonths = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  const bnMonthsShort = ['জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্ট','অক্টো','নভে','ডিসে'];
+
+  function toBn(num){
+    return String(num).replace(/[0-9]/g, d => bnDigits[d]);
+  }
+  function money(n){
+    const rounded = Math.round(n);
+    const neg = rounded < 0;
+    let s = Math.abs(rounded).toString();
+    let out = '';
+    // add thousand separators (Indian/Bangladeshi grouping)
+    if(s.length > 3){
+      let last3 = s.slice(-3);
+      let rest = s.slice(0, -3);
+      rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+      s = rest + ',' + last3;
+    }
+    out = '৳' + toBn(s);
+    return neg ? '-' + out : out;
+  }
+
+  const categories = {
+    income: [
+      {id:'বেতন', icon:'💰'},
+      {id:'বিক্রয়', icon:'🛍️'},
+      {id:'পাওনা টাকা', icon:'🤲'},
+      {id:'বোনাস', icon:'🎁'},
+      {id:'সেবা আয়', icon:'🧾'},
+      {id:'অনলাইন আয়', icon:'💻'},
+      {id:'উপহার', icon:'🎀'},
+      {id:'অন্যান্য', icon:'➕'}
+    ],
+    expense: [
+      {id:'বাসাভাড়া', icon:'🏠'},
+      {id:'মাছ-মাংস', icon:'🐟'},
+      {id:'শাক-সবজি', icon:'🥬'},
+      {id:'মোদির দোকান', icon:'🏪'},
+      {id:'মোদির দোকান বিল', icon:'🧾'},
+      {id:'কাঁচা বাজার বিল', icon:'🧺'},
+      {id:'যাতায়াত', icon:'🚌'},
+      {id:'বিদ্যুৎ বিল', icon:'⚡'},
+      {id:'ওয়াইফাই বিল', icon:'📶'},
+      {id:'পানির বিল', icon:'🚰'},
+      {id:'গ্যাস বিল', icon:'🔥'},
+      {id:'ডিস বিল', icon:'📺'},
+      {id:'মোবাইল বিল', icon:'📱'},
+      {id:'চিকিৎসা', icon:'💊'},
+      {id:'কেনাকাটা', icon:'🛍️'},
+      {id:'ধার শোধ', icon:'🤝'},
+      {id:'অন্যান্য', icon:'➖'}
+    ]
+  };
+  const iconOf = (type, cat) => {
+    const list = categories[type];
+    const found = list.find(c => c.id === cat);
+    return found ? found.icon : (type==='income' ? '➕' : '➖');
+  };
+
+  let entries = [];
+  let profile = 'business'; // 'job' | 'business'
+  let today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth(); // 0-indexed
+  let currentType = 'income';
+  let currentCategory = categories.income[0].id;
+  let dataReady = false;
+
+  // ========== File System Access API (Device Backup) ==========
+  let deviceFileHandle = null; // Will hold a FileSystemFileHandle
+
+  const $ = id => document.getElementById(id);
+
+  function pad(n){ return n < 10 ? '0'+n : ''+n; }
+  function todayStr(){ return today.getFullYear()+'-'+pad(today.getMonth()+1)+'-'+pad(today.getDate()); }
+
+  // ========== Service Worker Registration ==========
+  async function registerSW(){
+    if('serviceWorker' in navigator){
+      try {
+        await navigator.serviceWorker.register('sw.js');
+        console.log('Service Worker registered');
+      } catch(e) {
+        console.log('SW registration failed:', e);
+      }
+    }
+  }
+
+  // ========== Request Persistent Storage ==========
+  async function requestPersistentStorage(){
+    if(navigator.storage && navigator.storage.persist){
+      try {
+        const isPersisted = await navigator.storage.persisted();
+        if(!isPersisted){
+          const result = await navigator.storage.persist();
+          console.log('Persistent storage granted:', result);
+        }
+      } catch(e) {
+        console.log('Persistent storage error:', e);
+      }
+    }
+  }
+
+  // ========== File System Access API Functions ==========
+  async function saveToDevice(handle, data){
+    try {
+      if(!handle) return false;
+      const writable = await handle.createWritable();
+      await writable.write(JSON.stringify(data, null, 2));
+      await writable.close();
+      return true;
+    } catch(e) {
+      console.error('Device save failed:', e);
+      return false;
+    }
+  }
+
+  async function readFromDevice(handle){
+    try {
+      if(!handle) return null;
+      const file = await handle.getFile();
+      const text = await file.text();
+      return JSON.parse(text);
+    } catch(e) {
+      console.error('Device read failed:', e);
+      return null;
+    }
+  }
+
+  async function pickSaveLocation(){
+    try {
+      if(!('showSaveFilePicker' in window)){
+        showBackupNote('⚠️ আপনার ব্রাউজার ডিভাইস সেভ সমর্থন করে না। Chrome বা Edge ব্যবহার করুন।', true);
+        return null;
+      }
+      const handle = await window.showSaveFilePicker({
+        suggestedName: `hisab-khata-${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}.json`,
+        types: [{
+          description: 'JSON Backup',
+          accept: {'application/json': ['.json']}
+        }]
+      });
+      // Save current data to this file
+      const data = {
+        entries: entries,
+        profile: profile,
+        exportedAt: new Date().toISOString(),
+        version: 2
+      };
+      const success = await saveToDevice(handle, data);
+      if(success){
+        deviceFileHandle = handle;
+        localStorage.setItem('ledger-device-backup-name', handle.name);
+        updateDeviceStatus(true);
+        showBackupNote('✅ ডিভাইসে অটো-ব্যাকআপ লোকেশন সেট হয়েছে! এখন প্রতি পরিবর্তন স্বয়ংক্রিয়ভাবে সেভ হবে।');
+        // Also save the handle info in IndexedDB for recovery after page reload
+        try {
+          const idbReq = indexedDB.open('HisabKhataConfig', 1);
+          idbReq.onupgradeneeded = function(e){
+            const db = e.target.result;
+            if(!db.objectStoreNames.contains('config')){
+              db.createObjectStore('config');
+            }
+          };
+          idbReq.onsuccess = function(e){
+            const db = e.target.result;
+            const tx = db.transaction('config', 'readwrite');
+            const store = tx.objectStore('config');
+            store.put({name: handle.name, timestamp: Date.now()}, 'device-file-name');
+          };
+        } catch(e) { /* ignore */ }
+        return handle;
+      } else {
+        showBackupNote('⚠️ ফাইল সংরক্ষণে সমস্যা হয়েছে।', true);
+        return null;
+      }
+    } catch(e) {
+      if(e.name !== 'AbortError' && e.name !== 'SecurityError'){
+        showBackupNote('⚠️ লোকেশন সেট করতে সমস্যা: ' + e.message, true);
+      }
+      return null;
+    }
+  }
+
+  async function pickRestoreLocation(){
+    try {
+      if(!('showOpenFilePicker' in window)){
+        showBackupNote('⚠️ আপনার ব্রাউজার ফাইল পুনরুদ্ধার সমর্থন করে না। Chrome বা Edge ব্যবহার করুন।', true);
+        return;
+      }
+      const [handle] = await window.showOpenFilePicker({
+        types: [{
+          description: 'JSON Backup',
+          accept: {'application/json': ['.json']}
+        }],
+        multiple: false
+      });
+      const data = await readFromDevice(handle);
+      if(!data){
+        showBackupNote('⚠️ ফাইল পড়া যায়নি বা ফরম্যাট ঠিক নেই।', true);
+        return;
+      }
+      const importedEntries = Array.isArray(data.entries) ? data.entries : null;
+      if(!importedEntries || importedEntries.length === 0){
+        showBackupNote('⚠️ এই ফাইলে কোনো বৈধ হিসাবের ডাটা নেই।', true);
+        return;
+      }
+      // Merge or replace
+      const wasEmpty = entries.length === 0;
+      const existingIds = new Set(entries.map(x => String(x.id)));
+      let added = 0;
+      importedEntries.forEach(en => {
+        if(en && en.type && en.amount != null && en.category && en.date && !existingIds.has(String(en.id))){
+          entries.push(en);
+          existingIds.add(String(en.id));
+          added++;
+        }
+      });
+      if(wasEmpty && data.profile){
+        profile = data.profile;
+        applyProfileUI();
+        persistProfile();
+      }
+      persistEntries();
+      render();
+      renderDashboard();
+      // Also set this as the auto-backup location
+      if(!deviceFileHandle){
+        deviceFileHandle = handle;
+        localStorage.setItem('ledger-device-backup-name', handle.name);
+        updateDeviceStatus(true);
+      }
+      showBackupNote('✅ ' + toBn(added) + 'টি হিসাব পুনরুদ্ধার করা হয়েছে!');
+    } catch(e) {
+      if(e.name !== 'AbortError' && e.name !== 'SecurityError'){
+        showBackupNote('⚠️ পুনরুদ্ধার করতে সমস্যা: ' + e.message, true);
+      }
+    }
+  }
+
+  function updateDeviceStatus(enabled){
+    const el = $('deviceStatus');
+    if(enabled && deviceFileHandle){
+      const name = deviceFileHandle.name || localStorage.getItem('ledger-device-backup-name') || 'hisab-khata-backup.json';
+      el.className = 'device-status success';
+      el.innerHTML = `<span class="label">✅ অটো-ব্যাকআপ চালু আছে</span>
+        <span class="sub">ফাইল: ${name}<br>প্রতি পরিবর্তন স্বয়ংক্রিয়ভাবে ডিভাইসে সেভ হচ্ছে। অ্যাপ আনইন্সটল করলেও ডাটা থাকবে!</span>`;
+    } else {
+      el.className = 'device-status';
+      el.innerHTML = `<span class="label">⏸ অটো-ব্যাকআপ চালু নেই</span>
+        <span class="sub">"লোকেশন সেট করুন" বাটনে ক্লিক করে আপনার ফোন/কম্পিউটারের একটি ফোল্ডার বেছে নিন। তারপর প্রতিবার ডাটা পরিবর্তনের সাথে সাথে সেখানে অটোমেটিক ব্যাকআপ সেভ হবে। অ্যাপ আনইন্সটল করার পরও ডাটা ফিরে পাবেন!</span>`;
+    }
+  }
+
+  // Try to restore device handle from IndexedDB on startup
+  async function tryRestoreDeviceHandle(){
+    try {
+      const idbReq = indexedDB.open('HisabKhataConfig', 1);
+      return new Promise((resolve) => {
+        idbReq.onupgradeneeded = function(e){
+          const db = e.target.result;
+          if(!db.objectStoreNames.contains('config')){
+            db.createObjectStore('config');
+          }
+        };
+        idbReq.onsuccess = function(e){
+          const db = e.target.result;
+          const tx = db.transaction('config', 'readonly');
+          const store = tx.objectStore('config');
+          const getReq = store.get('device-file-name');
+          getReq.onsuccess = function(){
+            if(getReq.result && getReq.result.name){
+              // We know the file name but lost the actual handle (IndexedDB is cleared on uninstall too)
+              // So we just show a hint that they should reconnect
+              const name = getReq.result.name;
+              localStorage.setItem('ledger-device-backup-name', name);
+            }
+            resolve();
+          };
+          getReq.onerror = function(){ resolve(); };
+        };
+        idbReq.onerror = function(){ resolve(); };
+      });
+    } catch(e) {
+      return;
+    }
+  }
+
+  // ========== Core Data Functions ==========
+  async function loadData(){
+    // First load from localStorage (existing data or fresh)
+    try{
+      const raw = localStorage.getItem('ledger-entries');
+      entries = raw ? JSON.parse(raw) : [];
+    }catch(e){ entries = []; }
+    try{
+      const p = localStorage.getItem('ledger-profile');
+      if(p) profile = p;
+    }catch(e){ /* keep default */ }
+    
+    // If no entries exist in localStorage, try to recover from IndexedDB (legacy)
+    if(entries.length === 0){
+      try {
+        const idbData = await loadFromIndexedDB();
+        if(idbData && idbData.length > 0){
+          entries = idbData;
+          persistEntries();
+        }
+      } catch(e) { /* ignore */ }
+    }
+    
+    // After loading, try to sync back to IndexedDB for redundancy
+    if(entries.length > 0){
+      saveToIndexedDB(entries);
+    }
+
+    dataReady = true;
+    applyProfileUI();
+    render();
+    renderDashboard();
+    updateBackupStatus();
+    updateDeviceStatus(!!deviceFileHandle);
+  }
+
+  // IndexedDB as secondary storage (belt-and-suspenders approach)
+  function saveToIndexedDB(data){
+    try {
+      const req = indexedDB.open('HisabKhataDB', 1);
+      req.onupgradeneeded = function(e){
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains('entries')){
+          db.createObjectStore('entries', {keyPath: 'id'});
+        }
+      };
+      req.onsuccess = function(e){
+        const db = e.target.result;
+        const tx = db.transaction('entries', 'readwrite');
+        const store = tx.objectStore('entries');
+        // Clear and re-add all
+        store.clear();
+        data.forEach(item => store.add(item));
+      };
+    } catch(e) { /* ignore */ }
+  }
+
+  function loadFromIndexedDB(){
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open('HisabKhataDB', 1);
+        req.onupgradeneeded = function(e){
+          const db = e.target.result;
+          if(!db.objectStoreNames.contains('entries')){
+            db.createObjectStore('entries', {keyPath: 'id'});
+         }
+        };
+        req.onsuccess = function(e){
+          const db = e.target.result;
+          const tx = db.transaction('entries', 'readonly');
+          const store = tx.objectStore('entries');
+          const getAll = store.getAll();
+          getAll.onsuccess = function(){
+            resolve(getAll.result || []);
+          };
+          getAll.onerror = function(){
+            resolve([]);
+          };
+        };
+        req.onerror = function(){
+          resolve([]);
+        };
+      } catch(e) {
+        resolve([]);
+      }
+    });
+  }
+
+  async function persistEntries(){
+    try{ localStorage.setItem('ledger-entries', JSON.stringify(entries)); }
+    catch(e){ console.error('সংরক্ষণে সমস্যা হয়েছে', e); }
+    
+    // Also save to IndexedDB as fallback
+    saveToIndexedDB(entries);
+    
+    // Auto-save to device file system if handle is available
+    if(deviceFileHandle){
+      const data = {
+        entries: entries,
+        profile: profile,
+        exportedAt: new Date().toISOString(),
+        version: 2
+      };
+      const ok = await saveToDevice(deviceFileHandle, data);
+      if(!ok){
+        // If save fails, maybe the handle was revoked, clear it
+        deviceFileHandle = null;
+        updateDeviceStatus(false);
+      }
+    }
+  }
+
+  async function persistProfile(){
+    try{ localStorage.setItem('ledger-profile', profile); }
+    catch(e){ console.error('সংরক্ষণে সমস্যা হয়েছে', e); }
+  }
+
+  function applyProfileUI(){
+    $('chip-job').classList.toggle('active', profile === 'job');
+    $('chip-biz').classList.toggle('active', profile === 'business');
+  }
+
+  $('chip-job').addEventListener('click', () => { profile='job'; applyProfileUI(); persistProfile(); render(); });
+  $('chip-biz').addEventListener('click', () => { profile='business'; applyProfileUI(); persistProfile(); render(); });
+
+  // page tabs
+  function switchPage(page){
+    $('pageDashboard').classList.toggle('active', page === 'dashboard');
+    $('pageLedger').classList.toggle('active', page === 'ledger');
+    $('tabDash').classList.toggle('active', page === 'dashboard');
+    $('tabLedger').classList.toggle('active', page === 'ledger');
+    if(page === 'dashboard') renderDashboard();
+  }
+  $('tabDash').addEventListener('click', () => switchPage('dashboard'));
+  $('tabLedger').addEventListener('click', () => switchPage('ledger'));
+
+  function renderDashboard(){
+    if(!dataReady) return;
+    if(entries.length === 0){
+      $('sinceLabel').textContent = 'যাত্রা শুরু হয়নি এখনো';
+      $('at-income').textContent = '৳০';
+      $('at-income-tile').textContent = '৳০';
+      $('at-salary-tile').textContent = '৳০';
+      $('at-expense-tile').textContent = '৳০';
+      $('yearList').innerHTML = `<div class="empty-state">এখনো কোনো হিসাব যোগ করা হয়নি।<br>‘হিসাবের খাতা’ ট্যাব থেকে প্রথম হিসাবটি যোগ করুন।</div>`;
+      return;
+    }
+
+    const totalIncome = sum(entries, 'income');
+    const totalExpense = sum(entries, 'expense');
+    const totalSalary = entries.filter(e=>e.type==='income' && e.category==='বেতন').reduce((a,b)=>a+Number(b.amount),0);
+
+    let earliest = entries[0].date;
+    entries.forEach(e => { if(e.date < earliest) earliest = e.date; });
+    const ed = new Date(earliest+'T00:00:00');
+    $('sinceLabel').textContent = 'যাত্রা শুরু: ' + toBn(ed.getDate()) + ' ' + bnMonths[ed.getMonth()] + ', ' + toBn(ed.getFullYear()) + ' থেকে';
+
+    $('at-income').textContent = money(totalIncome);
+    $('at-income-tile').textContent = money(totalIncome);
+    $('at-salary-tile').textContent = money(totalSalary);
+    $('at-expense-tile').textContent = money(totalExpense);
+
+    // group by year
+    const byYear = {};
+    entries.forEach(e => {
+      const y = new Date(e.date+'T00:00:00').getFullYear();
+      if(!byYear[y]) byYear[y] = [];
+      byYear[y].push(e);
+    });
+    const years = Object.keys(byYear).map(Number).sort((a,b)=>b-a);
+    const nowYear = today.getFullYear();
+
+    const html = years.map(y => {
+      const list = byYear[y];
+      const yIncome = sum(list, 'income');
+      const yExpense = sum(list, 'expense');
+      const ySalary = list.filter(e=>e.type==='income' && e.category==='বেতন').reduce((a,b)=>a+Number(b.amount),0);
+      const ySavings = yIncome - yExpense;
+      return `
+        <div class="year-card" data-year="${y}">
+          <div class="yh">
+            <span class="yr">${toBn(y)}${y===nowYear ? '<span class="tag">চলতি বছর</span>' : ''}</span>
+            <span class="savings ${ySavings<0 ? 'negative':''}">সঞ্চয় ${money(ySavings)}</span>
+          </div>
+          <div class="year-grid">
+            <div class="year-stat income"><div class="l">মোট আয়</div><div class="v">${money(yIncome)}</div></div>
+            <div class="year-stat salary"><div class="l">মোট বেতন</div><div class="v">${money(ySalary)}</div></div>
+            <div class="year-stat expense"><div class="l">মোট ব্যয়</div><div class="v">${money(yExpense)}</div></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    $('yearList').innerHTML = html;
+  }
+
+  $('yearList').addEventListener('click', (ev) => {
+    const card = ev.target.closest('.year-card');
+    if(!card) return;
+    const y = parseInt(card.getAttribute('data-year'), 10);
+    const list = entries.filter(e => new Date(e.date+'T00:00:00').getFullYear() === y);
+    let latestMonth = 0;
+    if(list.length){
+      latestMonth = list.map(function(e){ return new Date(e.date+'T00:00:00').getMonth(); }).reduce(function(a,b){ return Math.max(a,b); });
+    }
+    viewYear = y;
+    viewMonth = (y === today.getFullYear()) ? today.getMonth() : latestMonth;
+    switchPage('ledger');
+    render();
+  });
+
+
+  function monthEntries(y, m){
+    return entries.filter(e => {
+      const d = new Date(e.date+'T00:00:00');
+      return d.getFullYear()===y && d.getMonth()===m;
+    });
+  }
+  function sum(list, type){
+    return list.filter(e=>e.type===type).reduce((a,b)=>a+Number(b.amount),0);
+  }
+
+  function render(){
+    if(!dataReady) return;
+    $('monthLabel').textContent = bnMonths[viewMonth] + ', ' + toBn(viewYear);
+
+    const mEntries = monthEntries(viewYear, viewMonth);
+    const mIncome = sum(mEntries, 'income');
+    const mExpense = sum(mEntries, 'expense');
+    const mBalance = mIncome - mExpense;
+
+    if(profile === 'job'){
+      const salary = mEntries.filter(e=>e.type==='income' && e.category==='বেতন').reduce((a,b)=>a+Number(b.amount),0);
+      $('hc-label').textContent = 'এই মাসের বেতন';
+      $('hc-value').textContent = money(salary);
+      $('hc-income-label').textContent = 'মোট আয়';
+    } else {
+      const dEntries = entries.filter(e => e.date === todayStr());
+      const todayIncome = sum(dEntries, 'income');
+      $('hc-label').textContent = 'আজকের আয়';
+      $('hc-value').textContent = money(todayIncome);
+      $('hc-income-label').textContent = 'মোট আয় (এই মাস)';
+    }
+    $('hc-income-val').textContent = money(mIncome);
+    $('hc-expense-val').textContent = money(mExpense);
+    $('hc-balance-val').textContent = money(mBalance);
+    document.getElementById('hc-balance-val').parentElement.classList.toggle('negative', mBalance < 0);
+
+    // breakdown of expenses by category
+    const box = $('breakdownBox');
+    const list = $('breakdownList');
+    const expByCat = {};
+    mEntries.filter(e=>e.type==='expense').forEach(e=>{
+      expByCat[e.category] = (expByCat[e.category]||0) + Number(e.amount);
+    });
+    const catArr = Object.entries(expByCat).sort((a,b)=>b[1]-a[1]);
+    if(catArr.length === 0){
+      box.style.display = 'none';
+    } else {
+      box.style.display = 'block';
+      const max = catArr[0][1];
+      list.innerHTML = catArr.map(([cat, amt]) => `
+        <div class="bar-row">
+          <div class="top"><span class="cat">${iconOf('expense',cat)} ${cat}</span><span class="amt">${money(amt)}</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="${Math.max(6, (amt/max*100))}"></div></div>
+        </div>
+      `).join('');
+      requestAnimationFrame(() => {
+        list.querySelectorAll('.bar-fill').forEach(el => {
+          el.style.width = el.getAttribute('data-w') + '%';
+        });
+      });
+    }
+
+    // list grouped by date, descending
+    const listBox = $('listBox');
+    const sorted = mEntries.slice().sort((a,b)=> b.date.localeCompare(a.date) || (b.id - a.id));
+    if(sorted.length === 0){
+      listBox.innerHTML = `<div class="empty-state">এই মাসে এখনো কোনো হিসাব যোগ করা হয়নি।<br>নিচের ‘+’ বাটনে চাপ দিয়ে শুরু করুন।</div>`;
+      return;
+    }
+    let html = '';
+    let lastDate = null;
+    sorted.forEach(e => {
+      if(e.date !== lastDate){
+        lastDate = e.date;
+        const d = new Date(e.date+'T00:00:00');
+        const label = toBn(d.getDate()) + ' ' + bnMonthsShort[d.getMonth()] + (d.getFullYear()!==viewYear ? ', '+toBn(d.getFullYear()) : '') + (e.date===todayStr() ? ' · আজ' : '');
+        html += `<div class="day-heading">${label}</div>`;
+      }
+      html += `
+        <div class="entry ${e.type}" data-id="${e.id}">
+          <div class="icon">${iconOf(e.type, e.category)}</div>
+          <div class="mid">
+            <div class="cat">${e.category}</div>
+            ${e.note ? `<div class="note">${escapeHtml(e.note)}</div>` : ''}
+          </div>
+          <div class="amt">${e.type==='income' ? '+' : '-'}${money(e.amount)}</div>
+          <div class="del" data-id="${e.id}">মুছুন</div>
+        </div>
+      `;
+    });
+    listBox.innerHTML = `<div class="day-group">${html}</div>`;
+    listBox.querySelectorAll('.entry').forEach((el, i) => {
+      el.style.animationDelay = Math.min(i * 25, 250) + 'ms';
+    });
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // month navigation
+  $('prevMonth').addEventListener('click', () => {
+    viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;}
+    render();
+  });
+  $('nextMonth').addEventListener('click', () => {
+    viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;}
+    render();
+  });
+
+  // delete with confirm-on-second-tap
+  let pendingDeleteId = null;
+  let pendingDeleteTimer = null;
+  document.addEventListener('click', (ev) => {
+    const del = ev.target.closest('.del');
+    if(!del) return;
+    const id = del.getAttribute('data-id');
+    if(pendingDeleteId === id){
+      entries = entries.filter(e => String(e.id) !== String(id));
+      persistEntries();
+      pendingDeleteId = null;
+      clearTimeout(pendingDeleteTimer);
+      render();
+      renderDashboard();
+    } else {
+      pendingDeleteId = id;
+      del.textContent = 'নিশ্চিত?';
+      del.classList.add('confirm');
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteTimer = setTimeout(() => { pendingDeleteId = null; render(); }, 2500);
+    }
+  });
+
+  // add sheet
+  const overlay = $('sheetOverlay');
+  function openSheet(){
+    currentType = 'income';
+    var defaultBiz = categories.income.find(function(c){ return c.id === 'বিক্রয়'; });
+    currentCategory = profile === 'job' ? 'বেতন' : (defaultBiz ? defaultBiz.id : categories.income[0].id);
+    $('typeIncomeBtn').classList.add('active');
+    $('typeExpenseBtn').classList.remove('active');
+    $('amountInput').value = '';
+    $('noteInput').value = '';
+    $('dateInput').value = todayStr();
+    updateHint();
+    buildCatGrid();
+    overlay.classList.add('open');
+  }
+  function closeSheet(){ overlay.classList.remove('open'); }
+  $('fabAdd').addEventListener('click', openSheet);
+  $('closeSheet').addEventListener('click', closeSheet);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeSheet(); });
+
+  function updateHint(){
+    const hint = $('typeHint');
+    if(currentType === 'income' && profile === 'job'){
+      hint.textContent = 'মাসে যেদিন বেতন পাবেন, সেদিন একবার যোগ করুন।';
+    } else if(currentType === 'income' && profile === 'business'){
+      hint.textContent = 'প্রতিদিনের বিক্রয় বা আয় যোগ করুন।';
+    } else {
+      hint.textContent = '';
+    }
+  }
+
+  $('typeIncomeBtn').addEventListener('click', () => {
+    currentType = 'income';
+    currentCategory = categories.income[0].id;
+    $('typeIncomeBtn').classList.add('active');
+    $('typeExpenseBtn').classList.remove('active');
+    updateHint();
+    buildCatGrid();
+  });
+  $('typeExpenseBtn').addEventListener('click', () => {
+    currentType = 'expense';
+    currentCategory = categories.expense[0].id;
+    $('typeExpenseBtn').classList.add('active');
+    $('typeIncomeBtn').classList.remove('active');
+    updateHint();
+    buildCatGrid();
+  });
+
+  function buildCatGrid(){
+    const grid = $('catGrid');
+    grid.innerHTML = categories[currentType].map(c => `
+      <div class="cat-pill ${c.id===currentCategory ? 'active':''}" data-cat="${c.id}">${c.icon} ${c.id}</div>
+    `).join('');
+  }
+  $('catGrid').addEventListener('click', (ev) => {
+    const pill = ev.target.closest('.cat-pill');
+    if(!pill) return;
+    currentCategory = pill.getAttribute('data-cat');
+    buildCatGrid();
+  });
+
+  $('saveBtn').addEventListener('click', async () => {
+    const amt = parseFloat($('amountInput').value);
+    const date = $('dateInput').value || todayStr();
+    const note = $('noteInput').value.trim();
+    if(!amt || amt <= 0){
+      $('amountInput').focus();
+      $('amountInput').style.borderColor = 'var(--red)';
+      setTimeout(()=>{ $('amountInput').style.borderColor=''; }, 1200);
+      return;
+    }
+    entries.push({
+      id: Date.now(),
+      type: currentType,
+      amount: amt,
+      category: currentCategory,
+      date: date,
+      note: note
+    });
+    await persistEntries();
+    closeSheet();
+    render();
+    renderDashboard();
+  });
+
+  // ---- Backup & Restore (existing) ----
+  function showBackupNote(msg, isErr){
+    const el = $('backupNote');
+    el.textContent = msg;
+    el.classList.toggle('err', !!isErr);
+    setTimeout(() => { if(el.textContent===msg) el.textContent=''; }, 5000);
+  }
+
+
+
+  function exportBackup(){
+    const data = { entries, profile, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    a.href = url;
+    a.download = `hisheb-backup-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    localStorage.setItem('ledger-last-backup', new Date().toISOString());
+    updateBackupStatus();
+  }
+
+  function importBackup(file){
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try{
+        const data = JSON.parse(e.target.result);
+        const importedEntries = Array.isArray(data.entries) ? data.entries : (Array.isArray(data) ? data : null);
+        if(!importedEntries) throw new Error('invalid format');
+        const wasEmpty = entries.length === 0;
+        const existingIds = new Set(entries.map(x => String(x.id)));
+        let added = 0;
+        importedEntries.forEach(en => {
+          if(en && en.type && en.amount != null && en.category && en.date && !existingIds.has(String(en.id))){
+            entries.push(en);
+            existingIds.add(String(en.id));
+            added++;
+          }
+        });
+        if(wasEmpty && data.profile){ profile = data.profile; applyProfileUI(); persistProfile(); }
+        persistEntries();
+        render();
+        renderDashboard();
+        showBackupNote(toBn(added) + 'টি হিসাব যোগ করা হয়েছে।');
+      }catch(err){
+        showBackupNote('ফাইলটি সঠিক নয়, আবার চেষ্টা করুন।', true);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  $('exportBtn').addEventListener('click', () => {
+    exportBackup();
+    showBackupNote('ব্যাকআপ ফাইল ডাউনলোড হয়েছে।');
+  });
+  $('importBtn').addEventListener('click', () => $('importFile').click());
+  $('importFile').addEventListener('change', (ev) => {
+    const file = ev.target.files[0];
+    if(file) importBackup(file);
+    ev.target.value = '';
+  });
+  $('emailBtn').addEventListener('click', () => {
+    exportBackup();
+    showBackupNote('ফাইল ডাউনলোড হয়েছে — Gmail খুলছে, ফাইলটি সংযুক্ত করুন।');
+    setTimeout(() => {
+      const subject = encodeURIComponent('আমার হিসাবের খাতা - ব্যাকআপ');
+      const body = encodeURIComponent('এইমাত্র ডাউনলোড হওয়া হিসাবের খাতার ব্যাকআপ ফাইলটি (.json) এই মেইলের সাথে সংযুক্ত করে নিজেকে পাঠিয়ে রাখুন। পরবর্তীতে ডেটা হারিয়ে গেলে অ্যাপের "ফাইল থেকে আনুন" বাটন দিয়ে এই ফাইল থেকে হিসাব ফিরিয়ে আনতে পারবেন।');
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, '_blank');
+    }, 500);
+  });
+
+  // Device backup button handlers
+  $('deviceAutoBtn').addEventListener('click', async () => {
+    const handle = await pickSaveLocation();
+    if(handle){
+      deviceFileHandle = handle;
+      updateDeviceStatus(true);
+    }
+  });
+  $('deviceRestoreBtn').addEventListener('click', pickRestoreLocation);
+
+  // ========== Settings overlay ==========
+  document.getElementById('openSettingsBtn').addEventListener('click', function() {
+    document.getElementById('settingsOverlay').classList.add('open');
+  });
+  document.getElementById('closeSettings').addEventListener('click', function() {
+    document.getElementById('settingsOverlay').classList.remove('open');
+  });
+  document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+    if(e.target === this) this.classList.remove('open');
+  });
+  // Settings import button uses same file input
+  document.getElementById('importBtnSettings').addEventListener('click', function() {
+    document.getElementById('importFile').click();
+  });
+  
+  // Update the backup status display (compact version)
+  function updateBackupStatus() {
+    var s = document.getElementById('backupStatus');
+    var last = localStorage.getItem('ledger-last-backup');
+    if(!last) { s.textContent = 'শেষ: নেই'; return; }
+    var d = new Date(last);
+    s.textContent = 'শেষ: ' + bnMonthsShort[d.getMonth()] + ' ' + toBn(d.getDate());
+  }
+
+  // ========== Initialize ==========
+  // ========== Auto-Backup Toggle (Download method - works everywhere!) ==========
+  let autoBackupEnabled = false;
+  
+  try {
+    const saved = localStorage.getItem('ledger-auto-backup');
+    autoBackupEnabled = saved === 'true';
+  } catch(e) {}
+  
+  function updateAutoBackupUI(){
+    var toggle = document.getElementById('autoBackupToggle');
+    var slider = document.getElementById('autoBackupSlider');
+    var knob = document.getElementById('autoBackupKnob');
+    toggle.checked = autoBackupEnabled;
+    slider.style.background = autoBackupEnabled ? 'var(--green)' : '#ccc';
+    knob.style.transform = autoBackupEnabled ? 'translateX(20px)' : 'translateX(0)';
+  }
+  
+  document.getElementById('autoBackupToggle').addEventListener('change', function() {
+    autoBackupEnabled = this.checked;
+    try { localStorage.setItem('ledger-auto-backup', autoBackupEnabled ? 'true' : 'false'); } catch(e) {}
+    updateAutoBackupUI();
+    if(autoBackupEnabled){
+      showBackupNote('অটো-ব্যাকআপ চালু!');
+    } else {
+      showBackupNote('অটো-ব্যাকআপ বন্ধ।', true);
+    }
+  });
+  
+  let backupDebounceTimer = null;
+  function triggerAutoBackupDownload(){
+    if(!autoBackupEnabled) return;
+    clearTimeout(backupDebounceTimer);
+    backupDebounceTimer = setTimeout(() => {
+      if(!autoBackupEnabled || entries.length === 0) return;
+      try {
+        const data = { entries, profile, exportedAt: new Date().toISOString(), version: 2 };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const d = new Date();
+        a.href = url;
+        a.download = 'hisab-auto-backup-' + d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + '.json';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        localStorage.setItem('ledger-last-backup', new Date().toISOString());
+        updateBackupStatus();
+      } catch(e) { console.error('Auto-backup failed:', e); }
+    }, 1500);
+  }
+  
+  const _origPersist2 = persistEntries;
+  persistEntries = async function() {
+    await _origPersist2.call(this);
+    triggerAutoBackupDownload();
+  };
+  
+  updateAutoBackupUI();
+
+  // ========== Share backup (WhatsApp, Telegram, Google Drive, Email etc.) ==========
+  document.getElementById('shareBtn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    showBackupNote('⏳ ব্যাকআপ তৈরি হচ্ছে...');
+    try {
+      var dataStr = JSON.stringify({ entries: entries, profile: profile, exportedAt: new Date().toISOString(), version: 2 }, null, 2);
+      var blob = new Blob([dataStr], { type: 'application/json' });
+      var fileName = 'hisab-backup-' + today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate()) + '.json';
+      
+      // ---- Try 1: Web Share API with file (WhatsApp/Telegram/Drive on mobile) ----
+      var shareWorked = false;
+      if (navigator.share) {
+        try {
+          var file = new File([blob], fileName, { type: 'application/json' });
+          var shareData = { title: 'আমার হিসাবের খাতা', text: 'ব্যাকআপ ফাইল', files: [file] };
+          // Check if files are supported
+          var canShareFiles = navigator.canShare ? navigator.canShare(shareData) : false;
+          if (canShareFiles) {
+            await navigator.share(shareData);
+            shareWorked = true;
+          } else {
+            // Try sharing without files (just text)
+            await navigator.share({ title: 'আমার হিসাবের খাতা', text: dataStr });
+            shareWorked = true;
+          }
+        } catch(shareErr) {
+          if (shareErr.name !== 'AbortError') { 
+            // Web Share failed, continue to download
+          } else {
+            shareWorked = true; // User cancelled, not an error
+          }
+        }
+      }
+      
+      if (shareWorked) {
+        localStorage.setItem('ledger-last-backup', new Date().toISOString());
+        updateBackupStatus();
+        showBackupNote('✅ ব্যাকআপ শেয়ার করা হয়েছে!');
+        return;
+      }
+      
+      // ---- Fallback: Download file ----
+      try {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        localStorage.setItem('ledger-last-backup', new Date().toISOString());
+        updateBackupStatus();
+        showBackupNote('✅ ফাইল ডাউনলোড হয়েছে! এখন WhatsApp/Telegram/Google Drive-এ শেয়ার করে ক্লাউডে সংরক্ষণ করুন।');
+      } catch(dlErr) {
+        showBackupNote('⚠️ ডাউনলোড ব্যর্থ। আবার চেষ্টা করুন।', true);
+      }
+    } catch(err) {
+      showBackupNote('⚠️ সমস্যা: ' + err.message, true);
+    }
+  });
+
+  // ========== Copy backup to clipboard ==========
+  document.getElementById('copyBtn').addEventListener('click', function() {
+    try {
+      var data = { entries: entries, profile: profile, exportedAt: new Date().toISOString(), version: 2 };
+      var text = JSON.stringify(data, null, 2);
+      if(navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showBackupNote('ব্যাকআপ ডাটা কপি হয়েছে!');
+        }).catch(function() {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    } catch(e) {
+      exportBackup();
+      showBackupNote('ফাইল ডাউনলোড হয়েছে।');
+    }
+  });
+  
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showBackupNote('ব্যাকআপ ডাটা কপি হয়েছে!');
+    } catch(e) {
+      exportBackup();
+      showBackupNote('ফাইল ডাউনলোড হয়েছে।');
+    }
+    document.body.removeChild(ta);
+  }
+
+  // ========== Initialize ==========
+  async function init(){
+    await requestPersistentStorage();
+    await registerSW();
+    await tryRestoreDeviceHandle();
+    // If we had a device file name from previous session, show hint
+    const prevName = localStorage.getItem('ledger-device-backup-name');
+    if(prevName && !deviceFileHandle){
+      // User had a device backup location set before, but handle was lost (e.g. after uninstall/reinstall)
+      // Show info message but user needs to reconnect
+      const el = $('deviceStatus');
+      el.className = 'device-status error';
+      el.innerHTML = `<span class="label">🔄 পূর্বের ব্যাকআপ ফাউন্ড</span>
+        <span class="sub">পূর্বের ব্যাকআপ ফাইল: ${prevName}<br>"ডিভাইস থেকে আনুন" বাটনে ক্লিক করে ঐ ফাইলটি নির্বাচন করুন, অথবা "লোকেশন সেট করুন" দিয়ে নতুন লোকেশন বেছে নিন।</span>`;
+    }
+    await loadData();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
