@@ -56,9 +56,22 @@
       radial-gradient(ellipse at top left, rgba(255,255,255,0.5) 0%, transparent 45%),
       var(--paper);
     position:relative;
-    padding-left:30px;
+    padding-left:30px; /* স্পাইনের জন্য */
     box-shadow: 0 0 60px rgba(0,0,0,0.35);
     overflow-x:hidden;
+  }
+  header.cover{
+    padding:24px 18px 18px 0; /* বাম পাশের প্যাডিং ০ করা হয়েছে */
+    position:relative;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+  }
+  header.cover > div:first-child{ /* টেক্সট কন্টেইনার */
+    flex-grow:1;
+    min-width:0; /* যেন ছোট হতে পারে */
+    padding-left:18px; /* কন্টেন্ট স্পাইনের পর থেকে শুরু হবে */
   }
   /* Ledger spine — leather binding with gilt edge */
   .spine{
@@ -108,6 +121,10 @@
   header.cover .sub{
     color:var(--muted); font-size:13px;
   }
+  .creator-tag{
+    font-size:10.5px; color:var(--gold); font-weight:600;
+    letter-spacing:0.5px; margin-top:2px;
+  }
   .seal{
     flex-shrink:0;
     width:46px; height:46px; border-radius:50%;
@@ -116,6 +133,7 @@
     box-shadow: 0 3px 8px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -2px 3px rgba(0,0,0,0.25);
     border:1px solid rgba(255,255,255,0.4);
     margin-top:2px;
+    margin-right:18px; /* ডান পাশের প্যাডিং */
   }
   .seal span{
     font-family:'Tiro Bangla', serif;
@@ -560,7 +578,7 @@
       <div class="eyebrow">দৈনন্দিন আয়-ব্যয়</div>
       <h1>আমার হিসাবের খাতা</h1>
       <div class="sub">আপনার প্রতিদিনের আয় ও ব্যয়ের সহজ হিসাব</div>
-      <div class="creator-tag" style="font-size:10.5px;color:var(--gold);font-weight:600;letter-spacing:0.5px;margin-top:2px;">Created by Sourav Ahmed</div>
+      <div class="creator-tag">Created by Sourav Ahmed</div>
     </div>
     <div class="seal"><span>৳</span></div>
   </header>
@@ -1752,5 +1770,5 @@
   init();
 })();
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e7609ddd60b253',t:'MTc4NzI5MTYwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
